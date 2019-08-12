@@ -177,14 +177,30 @@ namespace TimeTracker
 
 
             //Check sapbatch.txt file to see if WBS exists
-            string filePath = @"C:\Users\usjafr00\source\repos\TimeTracker\TimeTracker\bin\Debug\sapbatch.txt";
+            string redirect = @"C:\Users\usjafr00\Desktop\TimeTracker\TimeTracker\bin\Debug\Config\PATH_TO_WBS\config.txt";
+            StreamReader sr = new StreamReader(redirect);
+
+            string path;
+            string line1;
+            // Read and display lines from the file until the end of 
+            // the file is reached.
+            while ((line1 = sr.ReadLine()) != null)
+            {
+                errMessage += line1 + Environment.NewLine;
+          
+            }
+
+
+            
+
+            /*
             string[] wbslist = File.ReadAllLines(filePath);
             bool wbsExists = Array.Exists(wbslist, element => element == TxtWBS.Text);
             if (wbsExists)
-                /*proceed*/;
+                ;
             else
                 errMessage += "This WBS does not exist" + Environment.NewLine;
-
+            */
 
 
             //Show Error upon empty fields
