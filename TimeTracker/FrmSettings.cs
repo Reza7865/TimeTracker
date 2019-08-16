@@ -33,6 +33,7 @@ namespace TimeTracker
 
         private void TxtSeconds_TextChanged(object sender, EventArgs e)
         {
+
         }
 
         private void FrmSettings_Load(object sender, EventArgs e)

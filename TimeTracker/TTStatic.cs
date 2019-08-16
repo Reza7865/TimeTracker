@@ -10,6 +10,7 @@ namespace TimeTracker
         public static string ttVersion = "2019.07.24.1";
         public static string ttPathToDataLocal = "";
         public static string ttPathToDataCentral = "";
+        public static string ttPathToWBS = "";
         public static string ttAppPath;
 
         public static string GetDelimitedFieldData(string line, int fieldno, string separator)

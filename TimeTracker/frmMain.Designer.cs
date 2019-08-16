@@ -268,6 +268,7 @@
             // 
             // TxtWeek
             // 
+            this.TxtWeek.Enabled = false;
             this.TxtWeek.Location = new System.Drawing.Point(172, 32);
             this.TxtWeek.Margin = new System.Windows.Forms.Padding(2);
             this.TxtWeek.Name = "TxtWeek";

@@ -74,12 +74,8 @@ namespace TimeTracker
 
                 while ((line = file.ReadLine()) != null)
                 {
-                    
-
                     data = TTStatic.GetDelimitedFieldData(line, 5, ",");
-
                     hours += double.Parse(data);
-
                 }
 
                 file.Close();

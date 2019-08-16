@@ -11,5 +11,6 @@ namespace TimeTracker
         public Int32 Top { get; set; }
         public string PathToDataLocal { get; set; }
         public string PathToDataCentral { get; set; }
+        public string PathToWBS { get; set; }
     }
 }

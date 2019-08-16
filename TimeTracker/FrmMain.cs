@@ -31,6 +31,7 @@ namespace TimeTracker
             TxtEmployeeId.Text = t.EmployeeId;
             TTStatic.ttPathToDataLocal = t.PathToDataLocal;
             TTStatic.ttPathToDataCentral = t.PathToDataCentral;
+            TTStatic.ttPathToWBS = t.PathToWBS;
             TTStatic.ttAppPath = Application.StartupPath;
             TimTimer.Interval = t.Interval;
 
@@ -159,49 +160,72 @@ namespace TimeTracker
             GetThisText();
 
 
+
             //Validate WBS Format
-            string WBSpattern = @"^I-([0-9]{6})\.([0-9]{2})\.([0-2]{2})\.([0-8]{2})$";
-            Match match = Regex.Match(TxtWBS.Text, WBSpattern, RegexOptions.IgnoreCase);
+            string shortWBS = @"^(I|C)-([0-9]{6})\.([0-9]{2})\.([0-9][1-8])";
+            string longWBS = @"^(I|C)-([0-9]{6})\.([0-9]{2})\.([0-9]{2})\.([0-9][1-8])$";
+
+            Match match = Regex.Match(TxtWBS.Text, shortWBS, RegexOptions.IgnoreCase);
+            Match match1 = Regex.Match(TxtWBS.Text, longWBS, RegexOptions.IgnoreCase);
+
+            if (TxtWBS.Text.Length >= 15)
+            {
+                if (match1.Success)
+                    /*proceed*/;
+                else
+                { errMessage += "Invalid WBS"; errMessage += Environment.NewLine; }
+
+            }
             if (match.Success)
                 /*proceed*/;
             else
-            { errMessage += "WBS: Invalid"; errMessage += Environment.NewLine; }
+            { errMessage += "Invalid WBS"; errMessage += Environment.NewLine; }
                 
 
-            //Only allows numeric values into Hours field
-            Match match2 = Regex.Match(TxtHours.Text, "^[0-9].?[0-9]*$");    
+            //Validates Hours entry
+            Match match2 = Regex.Match(TxtHours.Text, "^?[0-9].?[0-9]*$");    
             if (match2.Success)
                 /*proceed*/;
             else 
-            { errMessage += "Invalid Hours Entry"; errMessage += Environment.NewLine; }
+            { errMessage += "Invalid Hours Format"; errMessage += Environment.NewLine; }
 
 
-            //Check sapbatch.txt file to see if WBS exists
-            string redirect = @"C:\Users\usjafr00\Desktop\TimeTracker\TimeTracker\bin\Debug\Config\PATH_TO_WBS\config.txt";
-            StreamReader sr = new StreamReader(redirect);
-
-            string path;
-            string line1;
-            // Read and display lines from the file until the end of 
-            // the file is reached.
-            while ((line1 = sr.ReadLine()) != null)
+            //Reads WBS file path from ttsettings
+            string settingsPath = TTStatic.ttAppPath + "//ttsettings.txt";
+            string PathToWBS = File.ReadLines(settingsPath).Skip(6).Take(1).First();
+            var validWbsFilePath = PathToWBS.Substring(PathToWBS.LastIndexOf('=') + 1);
+ 
+            
+            if (File.Exists(validWbsFilePath))
             {
-                errMessage += line1 + Environment.NewLine;
-          
+                var  wbslist = File.ReadAllLines(validWbsFilePath);
+                bool wbsExists = wbslist.Any(x => x.Contains(TxtWBS.Text.Substring(0,14)));
+                if (wbsExists)
+                    ;
+                else
+                    errMessage += "This WBS does not exist" + Environment.NewLine;
+            }
+            else
+            {
+                errMessage += "WBS file path is not configured in Debug/Incoming/" + Environment.NewLine;
             }
 
 
-            
+            //Reads all the valid WBS then checks if the user entered a valid WBS in field
 
             /*
-            string[] wbslist = File.ReadAllLines(filePath);
-            bool wbsExists = Array.Exists(wbslist, element => element == TxtWBS.Text);
-            if (wbsExists)
+            bool contains = false;
+            string[] lines = File.ReadAllLines(validWbsFilePath);
+            foreach (string lin in lines)
+            {
+                if (lin.Contains(TxtWBS.Text))
+                    contains = true;
+            }
+            if (contains)
                 ;
             else
                 errMessage += "This WBS does not exist" + Environment.NewLine;
             */
-
 
             //Show Error upon empty fields
             if (TxtEmployeeId.Text == "" ) { errMessage += "Employee ID can't be empty"; errMessage += Environment.NewLine; }
@@ -372,7 +396,6 @@ namespace TimeTracker
             if (result == DialogResult.OK)
             {
                 var filePath = ofd.FileName;
-
                 using (FileStream fs = File.Open(filePath, FileMode.Open))
                 {
                     Process.Start("notepad.exe", filePath);

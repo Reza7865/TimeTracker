@@ -49,6 +49,11 @@ namespace TimeTracker
 
                         tts.PathToDataCentral = value;
                         break;
+
+                    case "PATHTOWBS":
+                        tts.PathToWBS = value;
+                        break;
+
                     default:
                         tts.Interval = 360000;
                         break;
@@ -70,6 +75,7 @@ namespace TimeTracker
                 file.WriteLine("Top=" + t.Top);
                 file.WriteLine("PathToDataLocal=" + t.PathToDataLocal);
                 file.WriteLine("PathToDataCentral=" + t.PathToDataCentral);
+                file.WriteLine("PathToWBS=" + t.PathToWBS);
             }
         }
 
@@ -78,6 +84,11 @@ namespace TimeTracker
             TTSetting t = GetTTSettings();
 
             return t.EmployeeId;
+        }
+
+        public void SetWBS(TTSetting WBS)
+        {
+
         }
 
         public void SetTTSettingsEmployeeId(string employeeid)
